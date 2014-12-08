@@ -93,7 +93,6 @@ void chain(A5State intialState, byte outA[15]){
 		A5100Clock();
 		A5QRun(outA);
 	}
-	printf("SEARCH: %016llX\n",outA);
 	printf("%d \n",count);
 }
 
@@ -106,13 +105,11 @@ void tableCreate(){
 		//key[0]=i;
 		state=chainReduce(a);
 		chain(state,a);
-		
-		input[i] = compressState(a);
-		output[i] = compressStateStruct(state);
-		
-		printf("%u %u %u \n",state.R1,state.R2,state.R3);
-		for (z=0; z<8; z++) printf("%02X", a[z]);
-		printf("\nEND\n\n");
+
+		input[i] = compressStateStruct(state);
+		printf("%016llX,",input[i]);
+		output[i] = compressState(a);
+		printf("%016llX\n",output[i]);
 		
 	}
 }
@@ -143,33 +140,35 @@ void tableSearch(){
 		A5100Clock();
 		A5QRun(outA);
 	}
+	printf("OUTPUT:");
 	for (z=0; z<8; z++) printf("%02X", outA[z]);
 	
 	unsigned long long compress = compressState(outA);
 	for (z=0;z<SIZE;z++){
 		if (output[z]==compress){
-			printf("\nINPUT:%016llX",input[z]);
+			printf("\nINPUT:%016llX\n",input[z]);
+			state = convertToState(input[z]);
+			printf("State:%u %u %u \n",state.R1,state.R2,state.R3);
 			initial = input[z];
 			break;
 		}
 	}
 	
-	state = convertToState(initial);
+	state = convertToState(input[z]);
+	//printf("State:%u %u %u \n",state.R1,state.R2,state.R3);
 	A5SetState(&state);
 	A5100Clock();
 	A5QRun(outA);
 	while (!done(outA)){
+		if (compressState(outA) == 0x477CBAA0E3943D9B){
+			printf("WINNER:%016llX\n",compressStateStruct(state));
+		}
 		state=chainReduce(outA);
 		A5SetState(&state);
 		A5100Clock();
 		A5QRun(outA);
 	}
-	printf("\n");
-	for (z=0; z<8; z++) printf("%02X", outA[z]);
-	
-	
-	
-	
+	for (z=0; z<8; z++) printf("%02X", outA[z]);	
 }
 
 int main(){
