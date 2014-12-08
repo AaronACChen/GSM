@@ -60,6 +60,13 @@ void A5Clock(){
 	if (((A5R3&MAJ3)!=0)==maj) A5Clock3();
 }
 
+void A5100Clock(){
+	int i;
+	for (i=0; i<100; i++) {
+        A5Clock();
+    }
+}
+
 void A5Run(byte *A,byte *B){
 	memset(A,0,sizeof(byte)*16);
 	memset(B,0,sizeof(byte)*16);
@@ -71,6 +78,16 @@ void A5Run(byte *A,byte *B){
 	for (i=0; i<114; i++) {
 		A5Clock();
 		B[i/8] |= A5Getbit() << (7-(i&7));
+	}
+}
+
+void A5QRun(byte *A){
+	memset(A,0,sizeof(byte)*16);
+
+	int i = 0;
+	for (i=0; i<114; i++) {
+		A5Clock();
+		A[i/8] |= A5Getbit() << (7-(i&7));
 	}
 }
 
