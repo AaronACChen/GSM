@@ -56,7 +56,7 @@ unsigned long long compressState(byte *outA){
 
 int done(byte outA[15]){
 	int done = 0,i;
-	for (i=6;i<=7;i++){
+	for (i=5;i<=7;i++){
 			done |= outA[i];
 	}
 	if (done == 0) return 1;
@@ -75,9 +75,9 @@ void chain(A5State intialState, byte outA[15]){
 	while (!done(outA)){
 		count++;
 		if (count == 10000){
-			printf("\nKEYSTREAM:");
+			//printf("KEYSTREAM:");
 			for (z=0; z<8; z++) printf("%02X", outA[z]);
-			printf("\n");
+			printf(",");
 			/*
 			comp = compressState(outA);
 			printf("KEYSTREAM:%016llX\n",comp);
@@ -93,7 +93,7 @@ void chain(A5State intialState, byte outA[15]){
 		A5100Clock();
 		A5QRun(outA);
 	}
-	printf("%d \n",count);
+	printf("%d,",count);
 }
 
 void tableCreate(){
@@ -101,15 +101,15 @@ void tableCreate(){
 	A5State state;
 	byte a[15] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	for (i = 0; i < 4; i++){
+	for (i = 0; i < 1000; i++){
 		//key[0]=i;
 		state=chainReduce(a);
 		chain(state,a);
 
-		input[i] = compressStateStruct(state);
-		printf("%016llX,",input[i]);
-		output[i] = compressState(a);
-		printf("%016llX\n",output[i]);
+		input[1] = compressStateStruct(state);
+		printf("%016llX,",input[1]);
+		output[1] = compressState(a);
+		printf("%016llX\n",output[1]);
 		
 	}
 }
@@ -182,7 +182,7 @@ int main(){
 	A5GetState(&state);
 		
 	tableCreate();
-	tableSearch();
+	//tableSearch();
 	//A5Setup(key,frame);
 		
 	printf("\n\n");
