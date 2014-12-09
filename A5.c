@@ -91,7 +91,7 @@ void A5QRun(byte *A){
 	}
 }
 
-void A5Setup(reg key[], reg frame){
+void A5Setup(byte * key, reg frame){
 	A5R1=A5R2=A5R3=0;
 	reg keybit,framebit;
 	
@@ -126,14 +126,13 @@ void A5GetState(A5State * state){
 }
 
 int A5Bench(){
-	reg key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	reg test[9];
+	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 	reg frame = 0x134;
 	byte a[15],b[15];
 	int i;
 	
 	for (i=0;i<1000000;i++){
-		A5Setup(test,frame);
+		A5Setup(key,frame);
 		A5Run(a,b);
 	}
 	for (i=0; i<15; i++)

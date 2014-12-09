@@ -29,3 +29,20 @@ typedef struct {
 	reg R2; 
 	reg R3;
 } A5State;
+
+void A5Clock1();
+void A5Clock2();
+void A5Clock3();
+
+reg A5Getbit();
+reg A5Majority();
+
+void A5ClockAll();
+void A5Clock();
+void A5100Clock();
+void A5Run(byte *A,byte *B);
+void A5QRun(byte *A);
+void A5Setup(byte * key, reg frame);
+void A5SetState(A5State * state);
+void A5GetState(A5State * state);
+int A5Bench();
