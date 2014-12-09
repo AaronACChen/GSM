@@ -7,10 +7,10 @@ long long outputTable[SIZE];
 A5State chainReduce(byte *outA);
 A5State convertToState(unsigned long long stateB);
 
-void loadTable(){
+void loadTable(char * table){
 		unsigned long long input,output;
 		FILE *fp;
-		fp = fopen("TABLE","r");
+		fp = fopen(table,"r");
 		int x;
 		while(fscanf(fp,"%*llX,%*d,%llX,%llX,\n",&input,&output)!=EOF){
 			inputTable[x] = input;
@@ -71,8 +71,8 @@ void tableSearch(int end){
 	*/
 }
 
-int main(){
+int main(int argc, char *argv[]){
 	
-	loadTable();
+	loadTable(argv[1]);
 	tableSearch(5);
 }
