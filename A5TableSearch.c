@@ -12,7 +12,6 @@ void loadTable(char * table){
 		FILE *fp;
 		fp = fopen(table,"r");
 		int x = 0;
-		printf("BROKEN? \n",input,output);
 		while(fscanf(fp,"%*llX,%*d,%llX,%llX,\n",&input,&output)!=EOF){
 			inputTable[x] = input;
 			outputTable[x] = output;
@@ -46,7 +45,12 @@ void tableSearch(unsigned long long initial ,int end){
 	printf("\n");
 	
 	initialState = compressStateStruct(state);
-	printf("\nSTATE:%016llX\n",initialState);
+	printf("STATE:%016llX\n",initialState);
+
+	A5SetState(&state);
+	A5100Clock();
+	A5QRun(outA);
+	for (z=0; z<8; z++) printf("%02X", outA[z]);
 	
 	/*
 	unsigned long long compress = compressState(outA);
