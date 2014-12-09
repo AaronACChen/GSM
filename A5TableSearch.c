@@ -24,10 +24,17 @@ void loadTable(char * table){
 		fclose(fp);
 }
 
+int match(byte *a, byte *b){
+	int x,match = 1;
+	for (x=0;x<8;x++){
+		if (a[x]!=b[x]) match = 0;
+	}
+	return match;
+}
+
 void tableSearch(unsigned long long initial ,int end){
 	byte outA[15];
-	//unsigned long long initial = 0xCAE40D5E841B68C7;
-	unsigned long long initialState;
+	unsigned long long initialState,outputState;
 	int z;
 	A5State state;
 	state = convertToState(initial);
@@ -40,50 +47,46 @@ void tableSearch(unsigned long long initial ,int end){
 		A5100Clock();
 		A5QRun(outA);
 	}
-	printf("OUTPUT:");
-	for (z=0; z<8; z++) printf("%02X", outA[z]);
-	printf("\n");
-	
-	initialState = compressStateStruct(state);
-	printf("STATE:%016llX\n",initialState);
-
-	A5SetState(&state);
-	A5100Clock();
-	A5QRun(outA);
-	for (z=0; z<8; z++) printf("%02X", outA[z]);
-	
-	/*
-	unsigned long long compress = compressState(outA);
+	outputState = compressState(outA);
 	for (z=0;z<SIZE;z++){
-		if (output[z]==compress){
-			printf("\nINPUT:%016llX\n",input[z]);
-			state = convertToState(input[z]);
-			printf("State:%u %u %u \n",state.R1,state.R2,state.R3);
-			initial = input[z];
-			break;
+		if (outputTable[z] == outputState){
+			printf("FOUND CHAIN\n");
+			printf("OUTPUT:%016llX\n",outputState);
+			initialState = inputTable[z];
+			printf("INPUT:%016llX\n",initialState);
 		}
 	}
-	
-	state = convertToState(input[z]);
-	//printf("State:%u %u %u \n",state.R1,state.R2,state.R3);
+	printf("\n");
+	state = convertToState(initialState);
 	A5SetState(&state);
 	A5100Clock();
 	A5QRun(outA);
-	while (!done(outA)){
-		if (compressState(outA) == 0x477CBAA0E3943D9B){
-			printf("WINNER:%016llX\n",compressStateStruct(state));
-		}
+	
+	while (compressState(outA)!=initial){
 		state=chainReduce(outA);
 		A5SetState(&state);
 		A5100Clock();
 		A5QRun(outA);
 	}
-	for (z=0; z<8; z++) printf("%02X", outA[z]);	
-	*/
+	initialState = compressStateStruct(state);
+	printf("FOUND STATE\n");
+	printf("STATE:%016llX\n",initialState);
+	
+	A5SetState(&state);
+	A5100Clock();
+	A5QRun(outA);
+	printf("VERIFY:");
+	for (z=0; z<8; z++) printf("%02X", outA[z]);
+	printf("\n");
 }
 
 int main(int argc, char *argv[]){
 	unsigned long long state;
+	
+	if (argc < 4) {
+       fprintf(stderr,"usage %s table bitstream distinguishedPointStart\n", argv[0]);
+       return -1;
+    }
 	
 	int dp;
 	dp = atoi(argv[3]);
