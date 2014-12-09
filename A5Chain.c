@@ -71,7 +71,6 @@ void chain(A5State intialState, byte outA[15], int end){
 		if (count == 10000){
 			//printf("KEYSTREAM:");
 			for (z=0; z<8; z++) printf("%02X", outA[z]);
-			printf(",");
 		}
 		
 		state=chainReduce(outA);
@@ -79,5 +78,5 @@ void chain(A5State intialState, byte outA[15], int end){
 		A5100Clock();
 		A5QRun(outA);
 	}
-	printf("%d,",count);
+	printf(",%d,",count);
 }

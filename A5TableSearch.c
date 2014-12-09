@@ -27,6 +27,7 @@ void loadTable(char * table){
 void tableSearch(int end){
 	byte outA[15];
 	long long initial = 0xCAE40D5E841B68C7;
+	long long initialState;
 	int z;
 	A5State state;
 	state = convertToState(initial);
@@ -41,6 +42,11 @@ void tableSearch(int end){
 	}
 	printf("OUTPUT:");
 	for (z=0; z<8; z++) printf("%02X", outA[z]);
+	printf("\n");
+	
+	initialState = compressStateStruct(state);
+	printf("\nSTATE:%016llX\n",initialState);
+	
 	/*
 	unsigned long long compress = compressState(outA);
 	for (z=0;z<SIZE;z++){
@@ -72,7 +78,8 @@ void tableSearch(int end){
 }
 
 int main(int argc, char *argv[]){
-	
+	int dp;
+	dp = atoi(argv[2]);
 	loadTable(argv[1]);
-	tableSearch(5);
+	tableSearch(dp);
 }
