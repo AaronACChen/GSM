@@ -25,9 +25,9 @@ int main(int argc, char *argv[]){
 	
 	if (argc < 3) {
        fprintf(stderr,"usage %s chains distinguishedPointStart\n", argv[0]);
-       exit(0);
+       return -1;
     }
-	chains = atoi(argv[2]);
+	chains = atoi(argv[1]);
 	dp = atoi(argv[2]);
 	/*
 	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};

@@ -1,4 +1,4 @@
-#include "A5.h"
+#include "A5Chain.h"
 #define SIZE 1000
 
 long long inputTable[SIZE];
@@ -13,8 +13,6 @@ void loadTable(){
 		fp = fopen("TABLE","r");
 		int x;
 		while(fscanf(fp,"%*llX,%*d,%llX,%llX,\n",&input,&output)!=EOF){
-			//fscanf(fp,"%*llX,%*d,%llX,%llX,\n",&input,&output);
-			//printf("%016llX,%016llX\n",input,output);
 			inputTable[x] = input;
 			outputTable[x] = output;
 			x++;
@@ -26,16 +24,16 @@ void loadTable(){
 		fclose(fp);
 }
 
-void tableSearch(){
+void tableSearch(int end){
 	byte outA[15];
-	long long initial = 0x477CBAA0E3943D9B;
+	long long initial = 0xCAE40D5E841B68C7;
 	int z;
 	A5State state;
 	state = convertToState(initial);
 	A5SetState(&state);
 	A5100Clock();
 	A5QRun(outA);
-	while (!done(outA)){
+	while (!done(outA,end)){
 		state=chainReduce(outA);
 		A5SetState(&state);
 		A5100Clock();
@@ -74,28 +72,7 @@ void tableSearch(){
 }
 
 int main(){
-	/*
-	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	reg frame = 0x134;
-	byte a[15];byte b[15];
-	A5State state;
-	int i,z;
-	A5Setup(key,frame);
-	A5Run(a,b);
-	A5GetState(&state);
-		
-	tableCreate();
-	//tableSearch();
-	//A5Setup(key,frame);
-		
-	printf("\n\n");
-	return;
-	for (i=0; i<15; i++)
-		printf("%02X", a[i]);
-	printf("\n");
-	char t[4];
-	long tt[4];
-	*/
-	loadTable();
 	
+	loadTable();
+	tableSearch(5);
 }
