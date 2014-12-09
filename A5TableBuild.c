@@ -3,7 +3,7 @@
 void tableCreate(int chains, int end){
 	int i,z;
 	A5State state;	
-	srand (5);
+	srand (time(NULL));
 	byte a[15];
 	unsigned long long start,input,output;
 	for (i = 0; i < chains; i++){
@@ -29,19 +29,5 @@ int main(int argc, char *argv[]){
     }
 	chains = atoi(argv[1]);
 	dp = atoi(argv[2]);
-	/*
-	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	reg frame = 0x134;
-	byte a[15];byte b[15];
-	A5State state;
-	
-	A5Setup(key,frame);
-	A5Run(a,b);
-	A5GetState(&state);
-	printf("HEYHEYHEY\n");
-	*/
-	tableCreate(chains,dp);
-	//tableSearch();
-	//A5Setup(key,frame);
-	
+	tableCreate(chains,dp);	
 }
