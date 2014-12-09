@@ -78,5 +78,8 @@ void chain(A5State intialState, byte outA[15], int end){
 		A5100Clock();
 		A5QRun(outA);
 	}
+	if (count < 10000){
+		for (z=0; z<8; z++) printf("%02X", 0);
+	}
 	printf(",%d,",count);
 }

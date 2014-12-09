@@ -11,7 +11,8 @@ void loadTable(char * table){
 		unsigned long long input,output;
 		FILE *fp;
 		fp = fopen(table,"r");
-		int x;
+		int x = 0;
+		printf("BROKEN? \n",input,output);
 		while(fscanf(fp,"%*llX,%*d,%llX,%llX,\n",&input,&output)!=EOF){
 			inputTable[x] = input;
 			outputTable[x] = output;
@@ -24,10 +25,10 @@ void loadTable(char * table){
 		fclose(fp);
 }
 
-void tableSearch(int end){
+void tableSearch(unsigned long long initial ,int end){
 	byte outA[15];
-	long long initial = 0xCAE40D5E841B68C7;
-	long long initialState;
+	//unsigned long long initial = 0xCAE40D5E841B68C7;
+	unsigned long long initialState;
 	int z;
 	A5State state;
 	state = convertToState(initial);
@@ -78,8 +79,12 @@ void tableSearch(int end){
 }
 
 int main(int argc, char *argv[]){
+	unsigned long long state;
+	
 	int dp;
-	dp = atoi(argv[2]);
+	dp = atoi(argv[3]);
+	sscanf(argv[2],"%llX",&state);
+	printf("SEARCH:%016llX\n",state);
 	loadTable(argv[1]);
-	tableSearch(dp);
+	tableSearch(state,dp);
 }
