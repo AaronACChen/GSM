@@ -21,6 +21,17 @@ A5State chainReduce(byte *outA){
 	return state;
 }
 
+A5State convertToState(unsigned long long stateB){
+	A5State state;
+	int i;
+	state.R1 = stateB>>45;
+	state.R2 = stateB>>23;
+	state.R2&=SIZE2;
+	state.R3 = stateB;
+	state.R3&=SIZE3;
+	return state;
+}
+
 unsigned long long compressStateStruct(A5State state){
 	unsigned long long compress=0;
 	compress |= state.R1;
@@ -28,9 +39,6 @@ unsigned long long compressStateStruct(A5State state){
 	compress |= state.R2;
 	compress<<=23;
 	compress |= state.R3;
-	
-	
-	
 	return compress;
 }
 
@@ -42,28 +50,17 @@ unsigned long long compressState(byte *outA){
 		compress <<= 8;
 	}
 	compress |= outA[7];
-	
-	/*
-	printf("\nTEST\n",compress);
-	for (z=0; z<8; z++) printf("%02X", outA[z]);
-	printf("\n",compress);
-	printf("%016llX",compress);
-	printf("\n",compress);
-	*/
-	
 	return compress;
 }
 
 int done(byte outA[15]){
 	int done = 0,i;
-	for (i=5;i<=7;i++){
+	for (i=6;i<=7;i++){
 			done |= outA[i];
 	}
 	if (done == 0) return 1;
 	return 0;
 }
-
-A5State convertToState(unsigned long long stateB);
 
 void chain(A5State intialState, byte outA[15]){
 	long long count = 0,comp;
@@ -74,20 +71,13 @@ void chain(A5State intialState, byte outA[15]){
 	A5QRun(outA);
 	while (!done(outA)){
 		count++;
+		/*
 		if (count == 10000){
 			//printf("KEYSTREAM:");
 			for (z=0; z<8; z++) printf("%02X", outA[z]);
 			printf(",");
-			/*
-			comp = compressState(outA);
-			printf("KEYSTREAM:%016llX\n",comp);
-			state = convertToState(comp);
-			A5SetState(&state);
-			printf("\nSTATE: %u %u %u \n",state.R1,state.R2,state.R3);
-			A5100Clock();
-			A5QRun(outA);
-			*/
 		}
+		*/
 		state=chainReduce(outA);
 		A5SetState(&state);
 		A5100Clock();
@@ -100,8 +90,7 @@ void tableCreate(){
 	int i,z;
 	A5State state;
 	byte a[15] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	byte key[8] = {0x12, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
-	for (i = 0; i < 1000; i++){
+	for (i = 0; i < 10; i++){
 		//key[0]=i;
 		state=chainReduce(a);
 		chain(state,a);
@@ -114,16 +103,7 @@ void tableCreate(){
 	}
 }
 
-A5State convertToState(unsigned long long stateB){
-	A5State state;
-	int i;
-	state.R1 = stateB>>45;
-	state.R2 = stateB>>23;
-	state.R2&=SIZE2;
-	state.R3 = stateB;
-	state.R3&=SIZE3;
-	return state;
-}
+
 
 void tableSearch(){
 	byte outA[15];
